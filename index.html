@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    /* CSS 스타일링 */
+    .option {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    label {
+        font-size: 18px;
+        padding-right: 10px;
+    }
+
+    select {
+        font-size: 18px;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    .price {
+        margin-bottom: 20px;
+    }
+
+    .spacer {
+        margin-bottom: 40px; /* 인원선택과 최종금액 사이의 간격 조정 */
+    }
+</style>
+</head>
+<body>
+    <h2>지역</h2>
+    <div class="container">
+        <div class="option" id="cityOption" style="display: block;">
+            <label for="city">도시 선택:</label>
+            <select id="city">
+                <option value="">선택해주세요</option>
+                <option value="seoul">서울</option>
+                <option value="busan">부산</option>
+            </select>
+        </div>
+        <div class="option" id="districtOption" style="display: block;">
+            <label for="district">시 선택:</label>
+            <select id="district">
+                <option value="">선택해주세요</option>
+            </select>
+        </div>
+        <div class="option" id="townOption" style="display: block;">
+            <label for="town">동 선택:</label>
+            <select id="town">
+                <option value="">선택해주세요</option>
+            </select>
+        </div>
+    </div>
+    
+    <br>
+    <br>
+    <br>
+    
+    <h2>예상 조문객</h2>
+    <div class="container">
+        <div class="option" id="peopleOption" style="display: block;">
+            <label for="people">인원 선택:</label>
+            <select id="people">
+                <option value="">선택해주세요</option>
+                <option value="1">1명</option>
+                <option value="2">2명</option>
+                <option value="3">3명</option>
+                <option value="4">4명</option>
+            </select>
+        </div>
+    </div>
+    <div class="spacer"></div> <!-- 인원선택과 최종금액 사이의 간격 조정 -->
+    <div class="container">
+        <div class="price" id="price"></div>
+    </div>
+
+    <script>
+        // JavaScript 코드
+        const citySelect = document.getElementById("city");
+        const districtSelect = document.getElementById("district");
+        const townSelect = document.getElementById("town");
+        const peopleSelect = document.getElementById("people");
+        const priceDisplay = document.getElementById("price");
+
+        // 각 선택지에 대한 가격 설정
+        const prices = {
+            "seoul": {
+                "강남구": {
+                    "논현동": 10000,
+                    "인사동": 12000
+                },
+                "종로구": {
+                    "논현동": 11000,
+                    "인사동": 13000
+                }
+            },
+            "busan": {
+                "동래구": {
+                    "전포동": 9000,
+                    "암남동": 10000
+                },
+                "서구": {
+                    "전포동": 9500,
+                    "암남동": 10500
+                }
+            }
+        };
+
+        // 시 선택지를 업데이트하는 함수
+        function updateDistrictOptions(city) {
+            // 이전 옵션 초기화
+            districtSelect.innerHTML = "<option value=''>선택해주세요</option>";
+
+            // 선택된 도시에 해당하는 시들을 option 태그로 추가
+            for (const district in prices[city]) {
+                const option = document.createElement("option");
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            }
+
+            // 첫 번째 옵션 선택 후, 두 번째 옵션을 보여주고 연관 메뉴 표시
+            document.getElementById("districtOption").style.display = "inline-block";
+            updateTownOptions(city, districtSelect.value);
+        }
+
+        // 동 선택지를 업데이트하는 함수
+        function updateTownOptions(city, district) {
+            // 이전 옵션 초기화
+            townSelect.innerHTML = "<option value=''>선택해주세요</option>";
+
+            // 선택된 도시와 시에 해당하는 동들을 option 태그로 추가
+            for (const town in prices[city][district]) {
+                const option = document.createElement("option");
+                option.value = town;
+                option.textContent = town;
+                townSelect.appendChild(option);
+            }
+
+            // 세 번째 옵션 선택 후, 가격 계산 및 표시
+            document.getElementById("townOption").style.display = "inline-block";
+            updatePeopleOption();
+        }
+
+        // 인원 선택 옵션을 업데이트하는 함수
+        function updatePeopleOption() {
+            document.getElementById("peopleOption").style.display = "inline-block";
+            calculatePrice();
+        }
+
+        // 선택된 옵션에 따라 가격 계산하여 표시
+        function calculatePrice() {
+            const city = citySelect.value;
+            const district = districtSelect.value;
+            const town = townSelect.value;
+            const people = parseInt(peopleSelect.value);
+
+            if (city && district && town && people) {
+                const price = prices[city][district][town] * people;
+                priceDisplay.textContent = "최종 금액: " + price + "원";
+            } else {
+                priceDisplay.textContent = "";
+            }
+        }
+
+        // 옵션 변경 시 가격 계산 함수 호출
+        citySelect.addEventListener("change", function() {
+            updateDistrictOptions(citySelect.value);
+        });
+        districtSelect.addEventListener("change", function() {
+            updateTownOptions(citySelect.value, districtSelect.value);
+        });
+        townSelect.addEventListener("change", calculatePrice);
+        peopleSelect.addEventListener("change", calculatePrice);
+
+        // 초기화면에서도 가격 표시
+        calculatePrice();
+    </script>
+</body>
+</html>
