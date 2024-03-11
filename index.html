@@ -44,7 +44,7 @@
             <br>
             <br>
             <select id="city">
-                <option value="">선택해주세요</option>
+                <option value="">선택</option>
                 <option value="seoul">서울</option>
                 <option value="busan">부산</option>
             </select>
@@ -54,7 +54,7 @@
             <br>
             <br>
             <select id="district">
-                <option value="">선택헤주세요</option>
+                <option value="">선택</option>
             </select>
         </div>
         <div class="option" id="townOption" style="display: block;">
@@ -62,7 +62,7 @@
             <br>
             <br>
             <select id="town">
-                <option value="">선택해주세요</option>
+                <option value="">선택</option>
             </select>
         </div>
     </div>
@@ -78,7 +78,7 @@
             <br>
             <br>
             <select id="people">
-                <option value="">선택해주세요</option>
+                <option value="">선택</option>
                 <option value="1">1명</option>
                 <option value="2">2명</option>
                 <option value="3">3명</option>
@@ -126,7 +126,7 @@
         // 시 선택지를 업데이트하는 함수
         function updateDistrictOptions(city) {
             // 이전 옵션 초기화
-            districtSelect.innerHTML = "<option value=''>선택해주세요</option>";
+            districtSelect.innerHTML = "<option value=''>선택</option>";
 
             // 선택된 도시에 해당하는 시들을 option 태그로 추가
             for (const district in prices[city]) {
@@ -144,7 +144,7 @@
         // 동 선택지를 업데이트하는 함수
         function updateTownOptions(city, district) {
             // 이전 옵션 초기화
-            townSelect.innerHTML = "<option value=''>선택해주세요</option>";
+            townSelect.innerHTML = "<option value=''>선택</option>";
 
             // 선택된 도시와 시에 해당하는 동들을 option 태그로 추가
             for (const town in prices[city][district]) {
